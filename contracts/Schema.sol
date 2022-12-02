@@ -26,6 +26,7 @@ contract Schema {
         address owner;
         address seller;
         bool isSold;
+        string NFTCoverURI;
     }
 
     struct MediaItem {
@@ -35,8 +36,8 @@ contract Schema {
         bool isGated;
         string title;
         string description;
-        string cover;
-        string data;
+        string mediaURI;
+        string coverURI;
         string mediaType;
     }
 

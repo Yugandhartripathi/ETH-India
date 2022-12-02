@@ -18,7 +18,7 @@ export default function Home() {
           </Link>
         </div>
         <div className="header_center">
-          {}
+          <button>UploadContent</button>
         </div>
         <div className="header_right">
           <ConnectButton moralisAuth={false} />
