@@ -1,242 +1,296 @@
 import React, { useState } from "react";
-// import classes from "../../../styles/addmusic.module.css";
-// import classes from "./../../../styles/addmusic.module.css";
-// import { useRouter } from "next/router";
-import { Form } from "web3uikit";
-// import { ethers } from "ethers";
-// import Web3Modal from "web3modal";
+import { Select, Input, Checkbox, Button, Upload, Typography } from "web3uikit";
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
 const axios = require("axios").default;
+import { useRouter } from "next/router";
 
-// import { PROJECTID, PROJECTSECRET } from "../../../api_key";
-// import { create as ipfsHttpClient } from "ipfs-http-client";
+import { PROJECTID, PROJECTSECRET } from "./../../../api_key";
+import { create as ipfsHttpClient } from "ipfs-http-client";
 
-// const projectId = PROJECTID;
-// const projectSecret = PROJECTSECRET;
-// const authorization = "Basic " + btoa(projectId + ":" + projectSecret);
+const projectId = PROJECTID;
+const projectSecret = PROJECTSECRET;
+const authorization = "Basic " + btoa(projectId + ":" + projectSecret);
 
-// const ipfs = ipfsHttpClient({
-//   url: "https://ipfs.infura.io:5001/api/v0",
-//   headers: {
-//     authorization,
-//   },
-// });
+const ipfs = ipfsHttpClient({
+  url: "https://ipfs.infura.io:5001/api/v0",
+  headers: {
+    authorization,
+  },
+});
 
-// import { marketplaceAddress } from "../../../../backend/config";
-// import NFTMarketplace from "./../../../../backend/artifacts/contracts/NFTMarketPlace.sol/NFTMarketplace.json";
+import { oasisAddress } from "./../../../config";
+import Oasis from "./../../../artifacts/contracts/Oasis.sol/Oasis.json";
+
+// import { Web3Storage } from "web3.storage";
+
+// const apitoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDlhMTRCMDdEOTM5NDQwYWM1N0Y0NEVGOTAyQzBENjc5OEQ1NTNmRUUiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NzAwNDc2OTI4MDAsIm5hbWUiOiJvYXNpcyJ9.Hw4pDEfS9Q0LZ4aJAnq87723j7wj5dtb_3rasb4Ishs"
+// // Construct with token and endpoint
+// const client = new Web3Storage({ token: apiToken });
 
 function AddMediaForm({ setLoadingState }) {
-  //   return (
-  //     <>
-  //       <p color="white">media form</p>
-  //     </>
-  //   );
-
-  // uint256 tokenCount;
   const [tokenCount, setTokenCount] = useState(0);
-  // bool isGated;
   const [isGated, setIsGated] = useState(true);
-  // string title;
   const [title, setTitle] = useState("");
-  // string description;
   const [description, setDescription] = useState("");
-  // string mediaURI;
+  const [media, setMedia] = useState(null);
   const [mediaUri, setMediaUri] = useState("");
-  // string coverURI;
   const [mediaCover, setMediaCover] = useState("");
-  // string mediaType;
   const [mediaType, setMediaType] = useState("");
-
-  //   uint256 price;
   const [tokenPrice, setTokenPrice] = useState(0);
-  //   uint256 royalty;
   const [royalty, setRoyalty] = useState(0);
-
-  //   string NFTCoverURI;
+  const [NFTCover, setNFTCover] = useState(null);
   const [NFTCoverUri, setNFTCoverUri] = useState("");
 
-  //   const router = useRouter();
+  const router = useRouter();
+  function handleSelect(e) {
+    setMediaType(e.id);
+  }
   function handleChange(e) {
     e.preventDefault();
     const { name, value } = e.target;
     if (name === "name") {
-      setName(value);
+      setTitle(value);
+    }
+    if (name === "gated") {
+      setIsGated(value);
+    }
+    if (name === "count") {
+      setTokenCount(value);
     }
     if (name === "desc") {
-      setDesc(value);
+      setDescription(value);
     }
     if (name === "price") {
-      setPrice(value);
+      setTokenPrice(value);
     }
     if (name === "royalty") {
       setRoyalty(value);
     }
   }
-  async function onChange(e) {
-    const file = e.target.files[0];
-    setMp3(file);
+  function handleMediaFile(file) {
+    console.log(file);
+    setMedia(file);
   }
-  async function selectCover(e) {
-    const file = e.target.files[0];
-    setCover(file);
+  function handleMediaCoverFile(file) {
+    console.log(file);
+    setMediaCover(file);
   }
-  //   async function uploadToIPFS(mp3Url) {
-  //     /* first, upload to IPFS */
-  //     const data = JSON.stringify({
-  //       name,
-  //       desc,
-  //       image: mp3Url,
-  //     });
-  //     let nftUrl;
-  //     try {
-  //       const added = await ipfs.add(data);
-  //       nftUrl = `https://music-mania.infura-ipfs.io/ipfs/${added.path}`;
-  //     } catch (error) {
-  //       console.log("Error uploading nft json: ", error);
-  //     }
-  //     return nftUrl;
-  //   }
-  //   async function listNFTForSale() {
-  //     setLoadingState(true);
-  //     if (!name || !desc || !price || !royalty || !cover || !mp3) return;
-  //     let mp3Url;
-  //     try {
-  //       const result = await ipfs.add(mp3);
-  //       console.log("infura result", result);
-  //       mp3Url = `https://music-mania.infura-ipfs.io/ipfs/${result.path}`;
-  //     } catch (error) {
-  //       console.log("Error uploading mp3: ", error);
-  //     }
-  //     console.log("mp3url is ", mp3Url);
-  //     let coverUrl;
-  //     try {
-  //       const result = await ipfs.add(cover);
-  //       console.log("infura result", result);
-  //       coverUrl = `https://music-mania.infura-ipfs.io/ipfs/${result.path}`;
-  //     } catch (error) {
-  //       console.log("Error uploading cover photo: ", error);
-  //     }
-  //     console.log("cover url is ", coverUrl);
-  //     const nftUrl = await uploadToIPFS(mp3Url);
-  //     console.log("nft url is ", nftUrl);
-  //     const web3Modal = new Web3Modal();
-  //     const connection = await web3Modal.connect();
-  //     const provider = new ethers.providers.Web3Provider(connection);
-  //     const signer = provider.getSigner();
-  //     /* next, create the item */
-  //     const price_ = ethers.utils.parseUnits(price.toString(), "ether");
-  //     let contract = new ethers.Contract(
-  //       marketplaceAddress,
-  //       NFTMarketplace.abi,
-  //       signer
-  //     );
-  //     let listingPrice = await contract.getListingPrice();
-  //     listingPrice = listingPrice.toString();
-  //     let transaction = await contract.createToken(
-  //       nftUrl,
-  //       price_,
-  //       royalty,
-  //       coverUrl,
-  //       {
-  //         value: listingPrice,
-  //       }
-  //     );
-  //     await transaction.wait();
-  // setLoadingState(false);
-  //     router.push("/");
-  //   }
+  function handleNFTCoverFile(file) {
+    console.log(file);
+    setNFTCover(file);
+  }
+  async function uploadToIPFS(NFTCoverUrl) {
+    /* first, upload to IPFS */
+    const NFTTitle = title + "token";
+    const data = JSON.stringify({
+      NFTTitle,
+      description,
+      image: NFTCoverUrl,
+    });
+    let nftUrl;
+    try {
+      const added = await ipfs.add(data);
+      nftUrl = `https://pixie2.infura-ipfs.io/ipfs/${added.path}`;
+    } catch (error) {
+      console.log("Error uploading nft json: ", error);
+    }
+    return nftUrl;
+  }
+
+  async function listNFTForSale() {
+    let mediaUrl;
+    try {
+      const result = await ipfs.add(media);
+      console.log("infura result for media", result);
+      mediaUrl = `https://pixie2.infura-ipfs.io/ipfs/${result.path}`;
+    } catch (error) {
+      console.log("Error uploading mp3: ", error);
+    }
+    console.log("media url is is ", mediaUrl);
+
+    let mediaCoverUrl;
+    try {
+      const result = await ipfs.add(mediaCover);
+      console.log("infura result", result);
+      mediaCoverUrl = `https://pixie2.infura-ipfs.io/ipfs/${result.path}`;
+    } catch (error) {
+      console.log("Error uploading media cover photo: ", error);
+    }
+    console.log("media cover url is ", mediaCoverUrl);
+
+    //NFTCover
+    let tokenCoverUrl;
+    try {
+      const result = await ipfs.add(NFTCover);
+      console.log("infura result", result);
+      tokenCoverUrl = `https://pixie2.infura-ipfs.io/ipfs/${result.path}`;
+    } catch (error) {
+      console.log("Error uploading NFT cover photo: ", error);
+    }
+    console.log("NFT cover url is ", tokenCoverUrl);
+
+    const nftUrl = await uploadToIPFS(tokenCoverUrl); //
+    console.log("nft url is ", nftUrl);
+
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+    //     /* next, create the item */
+    const price_ = ethers.utils.parseUnits(tokenPrice.toString(), "ether");
+    let contract = new ethers.Contract(oasisAddress, Oasis.abi, signer);
+
+    let listingPrice = await contract.getListingPrice();
+    listingPrice = listingPrice.toString();
+
+    console.log("testing mediatype", mediaType);
+
+    let transaction = await contract.createMediaItem(
+      mediaType,
+      mediaUrl,
+      mediaCoverUrl,
+      title,
+      description,
+      isGated,
+      tokenCoverUrl,
+      tokenCount,
+      tokenPrice,
+      royalty,
+      {
+        value: listingPrice,
+      }
+    );
+    await transaction.wait();
+    setLoadingState(false);
+    router.push("/");
+  }
+
   return (
-    <Form
-      buttonConfig={{
-        onClick: function noRefCheck() {},
-        theme: "primary",
-      }}
-      data={[
-        {
-          inputWidth: "100%",
-          name: "first name",
-          type: "text",
-          value: "",
-        },
-        {
-          inputWidth: "100%",
-          name: "your email",
-          type: "email",
-          validation: {
-            regExp: "^[^@s]+@[^@s]+.[^@s]+$",
+    <div className="form">
+      <div className="input-div">
+        <Select
+          defaultOptionIndex={0}
+          id="Select"
+          name="mediaType"
+          label="Media Type"
+          onChange={handleSelect}
+          options={[
+            {
+              id: "image",
+              label: "Image",
+            },
+            {
+              id: "video",
+              label: "Video",
+            },
+          ]}
+          validation={{
             required: true,
-          },
-          value: "",
-        },
-        {
-          name: "your digits",
-          type: "tel",
-          validation: {
+          }}
+        />
+      </div>
+      <div className="input-div">
+        <Typography variant="subtitle2">Upload Media</Typography>
+        <Upload
+          onChange={handleMediaFile}
+          name="media"
+          theme="textOnly"
+          validation={{
             required: true,
-          },
-          value: "",
-        },
-        {
-          name: "your password",
-          type: "password",
-          validation: {
-            characterMaxLength: 20,
-            characterMinLength: 6,
+          }}
+        />
+      </div>
+      <div className="input-div">
+        <Typography variant="subtitle2">Upload Media Cover</Typography>
+        <Upload
+          onChange={handleMediaCoverFile}
+          name="cover"
+          theme="textOnly"
+          validation={{
             required: true,
-          },
-          value: "",
-        },
-        {
-          name: "Rate our form? 1-10",
-          type: "number",
-          validation: {
-            numberMax: 10,
-            numberMin: 1,
+          }}
+        />
+      </div>
+      <div className="input-div">
+        <Input
+          label="Title"
+          name="name"
+          onChange={handleChange}
+          validation={{
             required: true,
-          },
-          value: "",
-        },
-        {
-          name: "pizza fav",
-          options: ["pineapple", "peppers", "chillies"],
-          type: "box",
-          value: "what toppings do you like?",
-        },
-        {
-          name: "Morning checklist",
-          options: ["say GM", "make coffee", "build killer web3uiKit"],
-          type: "switch",
-          validation: {
+          }}
+        />
+      </div>
+      <div className="input-div">
+        <Input
+          label="Description"
+          name="desc"
+          //   type="text"
+          onChange={handleChange}
+          validation={{
             required: true,
-          },
-          value: "Check list",
-        },
-        {
-          name: "pokemon",
-          options: ["charmander", "squirtle", "bulbasaur"],
-          type: "radios",
-          value: "who's that pokemon?",
-        },
-        {
-          inputWidth: "100%",
-          name: "Image",
-          type: "file",
-          value: "",
-        },
-        {
-          inputWidth: "100%",
-          name: "Any more comments?",
-          type: "textarea",
-          validation: {
+          }}
+        />
+      </div>
+      <div className="input-div">
+        <Checkbox
+          id="gated"
+          label="Gated by NFT?"
+          name="gated"
+          onChange={handleChange}
+        />
+      </div>
+      <div className="input-div">
+        <Input
+          label="NFT Count"
+          onChange={handleChange}
+          name="count"
+          type="number"
+          validation={{
+            numberMax: 100,
+            numberMin: 0,
+          }}
+        />
+      </div>
+      <div className="input-div">
+        <Input
+          label="Royalty Percentage"
+          onChange={handleChange}
+          type="number"
+          name="royalty"
+          prefixIcon="%"
+          validation={{
+            numberMax: 100,
+            numberMin: 0,
+          }}
+        />
+      </div>
+      <div className="input-div">
+        <Input
+          label="NFT Price"
+          onChange={handleChange}
+          name="price"
+          prefixIcon="ETH"
+          type="text"
+        />
+      </div>
+      <div className="input-div">
+        <Typography variant="subtitle2">Upload NFT Cover Image</Typography>
+        <Upload
+          onChange={handleNFTCoverFile}
+          theme="textOnly"
+          name="nftcover"
+          validation={{
             required: true,
-          },
-          value: "",
-        },
-      ]}
-      onSubmit={function noRefCheck() {}}
-      title="Test form"
-    />
+          }}
+        />
+      </div>
+      <div className="input-div">
+        <Button onClick={listNFTForSale} text="Submit" theme="primary" />
+      </div>
+    </div>
   );
-  //   onClick={listNFTForSale}
 }
 
 export default AddMediaForm;

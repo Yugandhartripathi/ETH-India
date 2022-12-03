@@ -6,7 +6,14 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract Oasis is ERC721URIStorage {
-    address payable owner;
+    uint256 listingPrice = 0.025 ether;
+
+    /* Returns the listing price of the contract */
+    function getListingPrice() public view returns (uint256) {
+        return listingPrice;
+    }
+
+    address payable smartContractOwner;
 
     using Counters for Counters.Counter;
     Counters.Counter private _mediaIds;
@@ -51,7 +58,7 @@ contract Oasis is ERC721URIStorage {
     }
 
     constructor() ERC721("OasisTokens", "OASIS") {
-        owner = payable(msg.sender);
+        smartContractOwner = payable(msg.sender);
     }
 
     function createMediaItem(
@@ -65,7 +72,7 @@ contract Oasis is ERC721URIStorage {
         uint256 _tokenCount,
         uint256 _price,
         uint256 _royalty
-    ) public {
+    ) public payable {
         // new MediaItem object
         require(
             _isGated == true && _tokenCount > 0,

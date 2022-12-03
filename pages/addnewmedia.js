@@ -28,16 +28,11 @@ function Addnewmedia() {
   }, []);
 
   return (
-    <div>
+    <div className="home2">
       {loadingState ? (
         <p>Loading...</p>
       ) : (
-        <div className="home2">
-          <div className="home_right">
-            <h1>Add Your Music</h1>
-            <AddMediaForm setLoadingState={setLoadingState} />
-          </div>
-        </div>
+        <AddMediaForm setLoadingState={setLoadingState} />
       )}
     </div>
   );

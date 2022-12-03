@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 body {
   margin: 0;
@@ -54,7 +54,6 @@ body {
   margin: 0;
   margin-top: 30px;
   font-weight: 500;
-
 }
 
 .home_right h1 {
@@ -64,9 +63,14 @@ body {
 }
 
 .grad {
-
   background: rgb(31, 181, 205);
-  background: -webkit-linear-gradient(90deg, rgba(31, 181, 205, 1) 0%, rgba(58, 139, 223, 1) 25%, rgba(40, 93, 188, 1) 53%, rgba(124, 28, 221, 1) 100%);
+  background: -webkit-linear-gradient(
+    90deg,
+    rgba(31, 181, 205, 1) 0%,
+    rgba(58, 139, 223, 1) 25%,
+    rgba(40, 93, 188, 1) 53%,
+    rgba(124, 28, 221, 1) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -83,6 +87,23 @@ body {
   padding: 0 20px;
   box-sizing: content-box;
   flex-wrap: wrap;
+}
+
+.form {
+  width: 50vw;
+  background-color: #fff;
+  margin: auto auto;
+  padding: 30px;
+  border-radius: 5px 5px 5px 5px;
+  display: content-box;
+  align: left;
+}
+
+.input-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 
 /*Sidebar*/

@@ -13,6 +13,7 @@ module.exports = {
   networks: {
     hardhat: {
       chainId: 1337,
+      allowUnlimitedContractSize: true,
     },
     //  unused configuration commented out for now
     //  mumbai: {
