@@ -67,13 +67,14 @@ function AddMediaForm({ setLoadingState }) {
       setIsGated(!isGated);
       console.log(value);
     }
+    if (name === "desc") {
+      setDescription(value);
+    }
     if (isGated == true) {
       if (name === "count") {
         setTokenCount(value);
       }
-      if (name === "desc") {
-        setDescription(value);
-      }
+
       if (name === "price") {
         setTokenPrice(value);
       }
@@ -222,6 +223,10 @@ function AddMediaForm({ setLoadingState }) {
             {
               id: "image",
               label: "Image",
+            },
+            {
+              id: "audio",
+              label: "Audio",
             },
             {
               id: "video",

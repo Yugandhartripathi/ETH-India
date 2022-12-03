@@ -19,10 +19,12 @@ function MediaItems(props) {
             tooltipText={d.isGated ? "Buy NFT to gain access" : "Free"}
           >
             <div>
-              <Avatar image={d.coverURI} theme="image" size="230" isRounded />
+              <Link href={`/mediaItems/${d.mediaId}`}>
+                <Avatar image={d.coverURI} theme="image" size="230" isRounded />
+              </Link>
 
               <br />
-              <Link href={`/mediaItems/${d.mediaId}`}>TEST LINK</Link>
+
               <div
                 style={{
                   alignItems: "center",
