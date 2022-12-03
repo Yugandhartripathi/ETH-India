@@ -196,11 +196,13 @@ contract Oasis is ERC721URIStorage {
         token.isSold = true;
         token.owner = payable(msg.sender);
         token.seller = payable(address(0));
-        userOwnedTokens[token.owner] = tokenId;
+        userOwnedTokens[token.owner].push(tokenId);
     }
 
-    function getAllOwnedNFTs(address userAddress) {
-        uint256[] tokenIds = userOwnedTokens[userAddress];
+    function getAllOwnedNFTs(
+        address userAddress
+    ) public view returns (NFTToken[] memory) {
+        uint256[] memory tokenIds = userOwnedTokens[userAddress];
         uint currentIndex = 0;
         NFTToken[] memory tokens = new NFTToken[](tokenIds.length);
         for (uint i = 0; i < tokenIds.length; i++) {
