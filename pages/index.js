@@ -30,15 +30,7 @@ export default function Home() {
 
     const mediaItems = await Promise.all(
       data.map(async (i) => {
-        // const coverURI = await contract.mediaCoverURI(i.mediaId);
-        // const meta = await axios.get(coverURI);
-        // let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-        // const hash = await sha256(
-        //   coverURI.replace("https://music-mania.infura-ipfs.io/ipfs/","")
-        // );
-
         let item = {
-          // price,
           mediaId: i.mediaId.toNumber(),
           title: i.title,
           description: i.description,

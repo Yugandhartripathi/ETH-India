@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract Oasis is ERC721URIStorage {
-    uint256 listingPrice = 0.025 ether;
+    uint256 listingPrice = 0.005 ether;
 
     /* Returns the listing price of the contract */
     function getListingPrice() public view returns (uint256) {
@@ -18,20 +18,35 @@ contract Oasis is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _mediaIds;
     Counters.Counter private _tokenIds;
+    Counters.Counter private _eventIds;
 
     mapping(uint256 => MediaItem) private mediaIdToMediaItems;
     mapping(uint256 => NFTToken) private tokenIdToToken;
+    mapping(uint256 => Event) private eventIdToEvent;
 
     // Mappings
     mapping(address => User[]) private creatorToFollowers;
     mapping(address => MediaItem[]) private creatorToMediaItems;
+    mapping(address => Event[]) private creatorToEvent;
+
     mapping(address => uint256[]) private userOwnedTokens;
     mapping(uint256 => uint256[]) private mediaIdToTokenIds;
+
     mapping(uint256 => uint256) private tokenIdToMediaId;
     mapping(address => uint256) private creatorTokenSaleCount;
     mapping(address => uint256) private creatorTokenSaleValue;
+    mapping(uint256 => uint256) private eventToMedia;
+    mapping(uint256 => uint256) private mediaToEvent;
 
     // Structs
+    struct Event {
+        uint256 eventId;
+        string eventType;
+        string eventDate;
+        string eventTime;
+        string venueAddress;
+    }
+
     struct NFTToken {
         uint256 tokenId;
         uint256 price;
@@ -113,6 +128,27 @@ contract Oasis is ERC721URIStorage {
                 _NFTCoverURI
             );
         }
+    }
+
+    function createEvent(
+        string memory _eventDate,
+        string memory _eventTime,
+        string memory _eventType,
+        string memory _venueAddress
+    ) public {
+        _eventIds.increment();
+        uint256 id = _eventIds.current();
+        Event memory eventItem = Event(
+            id,
+            _eventType,
+            _eventDate,
+            _eventTime,
+            _venueAddress
+        );
+        uint256 _mediaId = _mediaIds.current();
+        mediaToEvent[_mediaId] = id;
+        eventToMedia[id] = _mediaId;
+        eventIdToEvent[id] = eventItem;
     }
 
     function createTokens(

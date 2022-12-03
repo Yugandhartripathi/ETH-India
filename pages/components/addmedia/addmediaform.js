@@ -30,7 +30,9 @@ import Oasis from "./../../../artifacts/contracts/Oasis.sol/Oasis.json";
 
 function AddMediaForm({ setLoadingState }) {
   const [tokenCount, setTokenCount] = useState(0);
-  const [isGated, setIsGated] = useState(true);
+  const [isGated, setIsGated] = useState(false);
+  const [isEvent, setIsEvent] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [media, setMedia] = useState(null);
@@ -41,6 +43,10 @@ function AddMediaForm({ setLoadingState }) {
   const [royalty, setRoyalty] = useState(0);
   const [NFTCover, setNFTCover] = useState(null);
   const [NFTCoverUri, setNFTCoverUri] = useState("");
+  const [eventDate, setEventDate] = useState("");
+  const [eventTime, setEventTime] = useState("");
+  const [eventVenue, setEventVenue] = useState("");
+  const [eventType, setEventType] = useState("");
 
   const router = useRouter();
   function handleSelect(e) {
@@ -53,20 +59,41 @@ function AddMediaForm({ setLoadingState }) {
     if (name === "name") {
       setTitle(value);
     }
+    if (name === "event") {
+      setIsEvent(!isEvent);
+      console.log(value);
+    }
     if (name === "gated") {
-      setIsGated(value);
+      setIsGated(!isGated);
+      console.log(value);
     }
-    if (name === "count") {
-      setTokenCount(value);
+    if (isGated == true) {
+      if (name === "count") {
+        setTokenCount(value);
+      }
+      if (name === "desc") {
+        setDescription(value);
+      }
+      if (name === "price") {
+        setTokenPrice(value);
+      }
+      if (name === "royalty") {
+        setRoyalty(value);
+      }
     }
-    if (name === "desc") {
-      setDescription(value);
-    }
-    if (name === "price") {
-      setTokenPrice(value);
-    }
-    if (name === "royalty") {
-      setRoyalty(value);
+    if (isEvent == true) {
+      if (name === "eventDate") {
+        setEventDate(value);
+      }
+      if (name === "eventTime") {
+        setEventTime(value);
+      }
+      if (name === "eventVenue") {
+        setEventVenue(value);
+      }
+      if (name === "eventType") {
+        setEventType(value);
+      }
     }
   }
   function handleMediaFile(file) {
@@ -148,7 +175,9 @@ function AddMediaForm({ setLoadingState }) {
     let listingPrice = await contract.getListingPrice();
     listingPrice = listingPrice.toString();
 
-    console.log("testing mediatype", mediaType);
+    // console.log("testing mediatype", mediaType);
+
+    console.log(isGated, tokenCount, "testing");
 
     let transaction = await contract.createMediaItem(
       mediaType,
@@ -165,7 +194,17 @@ function AddMediaForm({ setLoadingState }) {
         value: listingPrice,
       }
     );
+
     await transaction.wait();
+    if (isEvent) {
+      let transaction2 = await contract.createEvent(
+        eventDate,
+        eventTime,
+        eventType,
+        eventVenue
+      );
+      await transaction2.wait();
+    }
     setLoadingState(false);
     router.push("/");
   }
@@ -239,57 +278,130 @@ function AddMediaForm({ setLoadingState }) {
       </div>
       <div className="input-div">
         <Checkbox
+          id="event"
+          label="Is Event?"
+          name="event"
+          onChange={handleChange}
+        />
+      </div>
+      <div className="Optionals2">
+        {!isEvent ? null : (
+          <div>
+            <div className="input-div">
+              <Input
+                label="Event Date"
+                onChange={handleChange}
+                name="eventDate"
+                type="string"
+                validation={{
+                  numberMax: 100,
+                  numberMin: 0,
+                }}
+              />
+            </div>
+            <div className="input-div">
+              <Input
+                label="Event Time"
+                onChange={handleChange}
+                name="eventTime"
+                type="string"
+                validation={{
+                  numberMax: 100,
+                  numberMin: 0,
+                }}
+              />
+            </div>
+            <div className="input-div">
+              <Input
+                label="Event Venue"
+                onChange={handleChange}
+                name="eventVenue"
+                type="string"
+                validation={{
+                  numberMax: 100,
+                  numberMin: 0,
+                }}
+              />
+            </div>
+            <div className="input-div">
+              <Input
+                label="Event Type"
+                onChange={handleChange}
+                name="eventType"
+                type="string"
+                validation={{
+                  numberMax: 100,
+                  numberMin: 0,
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="input-div">
+        <Checkbox
           id="gated"
           label="Gated by NFT?"
           name="gated"
           onChange={handleChange}
         />
       </div>
-      <div className="input-div">
-        <Input
-          label="NFT Count"
-          onChange={handleChange}
-          name="count"
-          type="number"
-          validation={{
-            numberMax: 100,
-            numberMin: 0,
-          }}
-        />
+
+      <div className="Optionals">
+        {!isGated ? null : (
+          <div>
+            <div className="input-div">
+              <Input
+                label="NFT Count"
+                onChange={handleChange}
+                name="count"
+                type="number"
+                validation={{
+                  numberMax: 100,
+                  numberMin: 0,
+                }}
+              />
+            </div>
+            <div className="input-div">
+              <Input
+                label="Royalty Percentage"
+                onChange={handleChange}
+                type="number"
+                name="royalty"
+                prefixIcon="%"
+                validation={{
+                  numberMax: 100,
+                  numberMin: 0,
+                }}
+              />
+            </div>
+            <div className="input-div">
+              <Input
+                label="NFT Price"
+                onChange={handleChange}
+                name="price"
+                prefixIcon="ETH"
+                type="text"
+              />
+            </div>
+            <div className="input-div">
+              <Typography variant="subtitle2">
+                Upload NFT Cover Image
+              </Typography>
+              <Upload
+                onChange={handleNFTCoverFile}
+                theme="textOnly"
+                name="nftcover"
+                validation={{
+                  required: true,
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
-      <div className="input-div">
-        <Input
-          label="Royalty Percentage"
-          onChange={handleChange}
-          type="number"
-          name="royalty"
-          prefixIcon="%"
-          validation={{
-            numberMax: 100,
-            numberMin: 0,
-          }}
-        />
-      </div>
-      <div className="input-div">
-        <Input
-          label="NFT Price"
-          onChange={handleChange}
-          name="price"
-          prefixIcon="ETH"
-          type="text"
-        />
-      </div>
-      <div className="input-div">
-        <Typography variant="subtitle2">Upload NFT Cover Image</Typography>
-        <Upload
-          onChange={handleNFTCoverFile}
-          theme="textOnly"
-          name="nftcover"
-          validation={{
-            required: true,
-          }}
-        />
-      </div>
+
       <div className="input-div">
         <Button onClick={listNFTForSale} text="Submit" theme="primary" />
       </div>
