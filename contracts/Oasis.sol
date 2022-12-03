@@ -18,8 +18,8 @@ contract Oasis is ERC721URIStorage {
     // Mappings
     mapping(address => User[]) private creatorToFollowers;
     mapping(address => MediaItem[]) private creatorToMediaItems;
-    mapping(uint256 => uint256[]) private mediaToTokenIds;
-    mapping(uint256 => uint256) private tokenToMediaId;
+    mapping(uint256 => uint256[]) private mediaIdToTokenIds;
+    mapping(uint256 => uint256) private tokenIdToMediaId;
 
     // Structs
     struct NFTToken {
@@ -141,9 +141,23 @@ contract Oasis is ERC721URIStorage {
             // }
 
             tokenIdToToken[newTokenId] = token;
-            mediaToTokenIds[_mediaId].push(newTokenId);
-            tokenToMediaId[newTokenId] = _mediaId;
+            mediaIdToTokenIds[_mediaId].push(newTokenId);
+            tokenIdToMediaId[newTokenId] = _mediaId;
             _transfer(msg.sender, address(this), newTokenId);
         }
+    }
+
+    // get all functions
+    function getAllMedia() public view returns (MediaItem[] memory) {
+        uint itemCount = _mediaIds.current();
+        uint currentIndex = 0;
+
+        MediaItem[] memory items = new MediaItem[](itemCount);
+        for (uint i = 0; i < itemCount; i++) {
+            MediaItem storage currentItem = mediaIdToMediaItems[i + 1];
+            items[currentIndex] = currentItem;
+            currentIndex += 1;
+        }
+        return items;
     }
 }
