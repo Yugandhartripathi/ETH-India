@@ -212,4 +212,11 @@ contract Oasis is ERC721URIStorage {
         }
         return tokens;
     }
+
+    // getter functions
+    function getMediaItem(
+        uint256 mediaId
+    ) public view returns (MediaItem memory) {
+        return mediaIdToMediaItems[mediaId];
+    }
 }

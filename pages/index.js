@@ -19,9 +19,8 @@ export default function Home() {
   async function loadMediaItems() {
     // query media items
 
-    const provider = new ethers.providers.JsonRpcProvider(
-      "https://rpc-mumbai.maticvigil.com"
-    );
+    const provider = new ethers.providers.JsonRpcProvider();
+    // "https://rpc-mumbai.maticvigil.com"
 
     console.log("testing abis n adds", oasisAddress, Oasis);
 

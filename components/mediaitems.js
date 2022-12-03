@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, Avatar, Button } from "@web3uikit/core";
+import Link from "next/link";
 
 function MediaItems(props) {
   // console.log("ind com",props)
@@ -12,13 +13,16 @@ function MediaItems(props) {
             padding: "20px",
           }}
         >
+          {console.log(index, d)}
           <Card
             onClick={function noRefCheck() {}}
             tooltipText={d.isGated ? "Buy NFT to gain access" : "Free"}
           >
             <div>
               <Avatar image={d.coverURI} theme="image" size="230" isRounded />
+
               <br />
+              <Link href={`/mediaItems/${d.mediaId}`}>TEST LINK</Link>
               <div
                 style={{
                   alignItems: "center",
@@ -30,6 +34,7 @@ function MediaItems(props) {
               >
                 {d.title}
               </div>
+
               <div
                 style={{
                   alignItems: "center",

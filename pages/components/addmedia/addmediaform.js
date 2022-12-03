@@ -138,8 +138,11 @@ function AddMediaForm({ setLoadingState }) {
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
+
     //     /* next, create the item */
     const price_ = ethers.utils.parseUnits(tokenPrice.toString(), "ether");
+    console.log(price_, tokenPrice, tokenPrice.toString());
+    // return;
     let contract = new ethers.Contract(oasisAddress, Oasis.abi, signer);
 
     let listingPrice = await contract.getListingPrice();
