@@ -6,6 +6,8 @@ import { oasisAddress } from "./../../config";
 import Oasis from "./../../artifacts/contracts/Oasis.sol/Oasis.json";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
+import Web3Modal from "web3modal";
+
 import classes from "../../styles/songPage.module.css";
 import { SleepyCat } from "web3uikit";
 import ReactPlayer from "react-player";
@@ -44,7 +46,6 @@ function MediaItemPage() {
     setMedia(data1);
     setTokenDetails(data2);
   }
-
   // async function loadToken() {
   //   const mediaId = router.query.mediaId;
   //   if (!mediaId) return;
@@ -62,6 +63,44 @@ function MediaItemPage() {
   const toggle = () => {
     setPlaying(!playing);
   };
+
+  async function initNFTTransaction() {
+    console.log("NFT transaction in progress.");
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+
+    let contract = new ethers.Contract(oasisAddress, Oasis.abi, signer);
+
+    console.log(media.mediaId, "testing");
+    let sellingToken = await contract.fetchNFTUpForSale(media.mediaId);
+    console.log(sellingToken);
+    if (sellingToken["NFTCoverURI"] === "sold") {
+      console.log("SOLD OUT!!!!");
+    } else {
+      // let price_ = ethers.utils.formatUnits(
+      //   sellingToken.price.toString(),
+      //   "ether"
+      // );
+      // const price_ = ethers.utils.parseUnits(
+      //   sellingToken.price.toString(),
+      //   "ether"
+      // );
+      let price_ = sellingToken.price;
+      console.log(
+        "UI PRICE TEST:",
+        price_,
+        sellingToken.price,
+        sellingToken.price.toString()
+      );
+      let transaction = await contract.NFTTokenSale(sellingToken.tokenId, {
+        value: price_,
+      });
+      await transaction.wait();
+      console.log("Sale successful");
+    }
+  }
 
   return (
     <div>
@@ -129,16 +168,16 @@ function MediaItemPage() {
                 </div>
                 <div className={classes.song_right}>
                   <button
-                    // onClick={}
+                    onClick={initNFTTransaction}
                     className={classes.play_btn}
                   >
-                    ReSell
+                    Buy
                   </button>
                   <button
                     // onClick={}
                     className={classes.play_btn}
                   >
-                    Buy
+                    Resell
                   </button>
 
                   {/* {media.sold == false ? (
