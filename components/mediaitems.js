@@ -13,7 +13,7 @@ function MediaItems(props) {
             padding: "20px",
           }}
         >
-          {console.log(index, d)}
+          {/* {console.log(index, d)} */}
           <Link href={`/mediaItems/${d.mediaId}`}>
             <Card
               onClick={function noRefCheck() {}}
