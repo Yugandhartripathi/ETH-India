@@ -30,8 +30,8 @@ contract Oasis is ERC721URIStorage {
     mapping(address => MediaItem[]) private creatorToMediaItems;
     mapping(address => Event[]) private creatorToEvent;
 
-    mapping(address => uint256[]) private userOwnedTokens;
-    mapping(uint256 => uint256[]) private mediaIdToTokenIds;
+    mapping(address => uint256[]) private userOwnedTokens; // useless
+    mapping(uint256 => uint256[]) private mediaIdToTokenIds; //
 
     mapping(uint256 => uint256) private tokenIdToMediaId;
     mapping(address => uint256) private creatorTokenSaleCount;
@@ -260,19 +260,6 @@ contract Oasis is ERC721URIStorage {
     //     return tokens;
     // }
 
-    // getter functions
-    function getMediaItem(
-        uint256 mediaId
-    ) public view returns (MediaItem memory) {
-        return mediaIdToMediaItems[mediaId];
-    }
-
-    function getTokenData(
-        uint256 mediaId
-    ) public view returns (NFTToken memory) {
-        return tokenIdToToken[mediaIdToTokenIds[mediaId][0]];
-    }
-
     function fetchNFTUpForSale(
         uint256 mediaId
     ) public view returns (NFTToken memory) {
@@ -295,5 +282,87 @@ contract Oasis is ERC721URIStorage {
                 false,
                 "sold"
             );
+    }
+
+    // getter functions
+    function getMediaItem(
+        uint256 mediaId
+    ) public view returns (MediaItem memory) {
+        return mediaIdToMediaItems[mediaId];
+    }
+
+    function getTokenData(
+        uint256 mediaId
+    ) public view returns (NFTToken memory) {
+        return tokenIdToToken[mediaIdToTokenIds[mediaId][0]];
+    }
+
+    /* Returns only items that a user has purchased */
+    function fetchMyNFTs() public view returns (NFTToken[] memory) {
+        uint totalItemCount = _tokenIds.current();
+        uint itemCount = 0;
+        uint currentIndex = 0;
+
+        for (uint i = 0; i < totalItemCount; i++) {
+            if (tokenIdToToken[i + 1].owner == msg.sender) {
+                itemCount += 1;
+            }
+        }
+
+        NFTToken[] memory items = new NFTToken[](itemCount);
+
+        for (uint256 i = 0; i < totalItemCount; i++) {
+            if (tokenIdToToken[i + 1].owner == msg.sender) {
+                uint currentId = i + 1;
+                NFTToken storage currentItem = tokenIdToToken[currentId];
+                items[currentIndex] = currentItem;
+                currentIndex += 1;
+            }
+        }
+        return items;
+    }
+
+    // Return all MArketItems for a specific creator
+    function fetchMediaforCreator(
+        address creator
+    ) public view returns (MediaItem[] memory) {
+        uint totalItemCount = _mediaIds.current();
+        uint itemCount = 0;
+        uint currentIndex = 0;
+
+        for (uint i = 0; i < totalItemCount; i++) {
+            if (mediaIdToMediaItems[i + 1].creator == creator) {
+                itemCount += 1;
+            }
+        }
+
+        MediaItem[] memory items = new MediaItem[](itemCount);
+
+        for (uint256 i = 0; i < totalItemCount; i++) {
+            if (mediaIdToMediaItems[i + 1].creator == creator) {
+                uint256 currentId = i + 1;
+                MediaItem storage currentItem = mediaIdToMediaItems[currentId];
+                items[currentIndex] = currentItem;
+                currentIndex += 1;
+            }
+        }
+        return items;
+    }
+
+    // Fetch Events for a Creator
+    function fetchEventsForCreator(
+        address creator
+    ) public view returns (Event[] memory) {
+        return creatorToEvent[creator];
+    }
+
+    //  sale of a creator
+    function creatorSale(address creator) public view returns (uint256) {
+        return creatorTokenSaleCount[creator];
+    }
+
+    // revenue generated for a creator
+    function creatorRev(address creator) public view returns (uint256) {
+        return creatorTokenSaleValue[creator];
     }
 }
