@@ -1,4 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+body{
+  margin:0;
+  padding:0;
+}
 .header_main {
   display: flex;
   align-items: center;
@@ -9,19 +14,28 @@
   color: white;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
   background-color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 .header_left {
-  flex: 0.1;
-  position:absolute;
-  top:20px;
-  left:30px;
+  position: absolute;
+  left: 30px;
 }
 .header_left img {
-  width: 130px;
-  height: 40px;
+  width: 250px;
+  height: 150px;
 }
-.header_center {
-  flex: 0.2;
+.upload_button {
+  background: red;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  border-radius: 20px;
+  text-decoration: none;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .search_div {
   background-color: white;
@@ -35,11 +49,7 @@
   width: 90%;
 }
 .header_right {
-  flex: 0.1;
-  position: absolute;
-  right:30px;
-  top:20px;
-  
+  position: relative;
 }
 .textt{
   color:rgb(0,139,139);

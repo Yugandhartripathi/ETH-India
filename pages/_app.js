@@ -1,12 +1,13 @@
 import React,{useState} from "react";
 import Link from "next/link";
 
-import ReactDOM from "react-dom/client";
 import "./home.css";
-import { MoralisProvider } from "react-moralis";
-import { NotificationProvider } from "web3uikit";
 
 import classes from "./../styles/app.module.css";
+
+import ReactDOM from "react-dom/client";
+import { MoralisProvider } from "react-moralis";
+import { NotificationProvider } from "web3uikit";
 
 function MyApp({ Component, pageProps }) {
   return (
