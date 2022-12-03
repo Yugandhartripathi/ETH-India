@@ -25,8 +25,11 @@ contract Oasis is ERC721URIStorage {
     // Mappings
     mapping(address => User[]) private creatorToFollowers;
     mapping(address => MediaItem[]) private creatorToMediaItems;
+    mapping(address => uint256[]) private userOwnedTokens;
     mapping(uint256 => uint256[]) private mediaIdToTokenIds;
     mapping(uint256 => uint256) private tokenIdToMediaId;
+    mapping(address => uint256) private creatorTokenSaleCount;
+    mapping(address => uint256) private creatorTokenSaleValue;
 
     // Structs
     struct NFTToken {
@@ -43,6 +46,7 @@ contract Oasis is ERC721URIStorage {
     struct MediaItem {
         uint256 mediaId;
         uint256 tokenCount;
+        uint256 availableCount;
         address payable creator;
         bool isGated;
         string title;
@@ -85,6 +89,7 @@ contract Oasis is ERC721URIStorage {
 
         MediaItem memory item = MediaItem(
             id,
+            _tokenCount,
             _tokenCount,
             payable(msg.sender),
             _isGated,
@@ -154,17 +159,55 @@ contract Oasis is ERC721URIStorage {
         }
     }
 
-    // get all functions
+    // get all mediaItems
     function getAllMedia() public view returns (MediaItem[] memory) {
         uint itemCount = _mediaIds.current();
         uint currentIndex = 0;
 
         MediaItem[] memory items = new MediaItem[](itemCount);
         for (uint i = 0; i < itemCount; i++) {
-            MediaItem storage currentItem = mediaIdToMediaItems[i + 1];
+            MediaItem memory currentItem = mediaIdToMediaItems[i + 1];
             items[currentIndex] = currentItem;
             currentIndex += 1;
         }
         return items;
+    }
+
+    function NFTTokenSale(uint256 tokenId) public payable {
+        NFTToken memory token = tokenIdToToken[tokenId];
+        uint256 price = token.price;
+        address seller = token.seller;
+        require(
+            msg.value == price,
+            "Please submit the asking price in order to complete the purchase"
+        );
+        _transfer(address(this), msg.sender, tokenId);
+        payable(smartContractOwner).transfer(listingPrice);
+
+        if (seller == token.creator) {
+            payable(seller).transfer(msg.value);
+            creatorTokenSaleCount[seller] += 1;
+            creatorTokenSaleValue[seller] += token.price;
+        } else {
+            payable(seller).transfer((msg.value / 100) * (100 - token.royalty));
+            payable(token.creator).transfer((msg.value / 100) * token.royalty);
+            creatorTokenSaleValue[seller] += (msg.value / 100) * token.royalty;
+        }
+        token.isSold = true;
+        token.owner = payable(msg.sender);
+        token.seller = payable(address(0));
+        userOwnedTokens[token.owner] = tokenId;
+    }
+
+    function getAllOwnedNFTs(address userAddress) {
+        uint256[] tokenIds = userOwnedTokens[userAddress];
+        uint currentIndex = 0;
+        NFTToken[] memory tokens = new NFTToken[](tokenIds.length);
+        for (uint i = 0; i < tokenIds.length; i++) {
+            NFTToken memory currentToken = tokenIdToToken[tokenIds[i]];
+            tokens[currentIndex] = currentToken;
+            currentIndex += 1;
+        }
+        return tokens;
     }
 }
