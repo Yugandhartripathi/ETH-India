@@ -2117,7 +2117,7 @@
   resolved "https://registry.yarnpkg.com/@web3uikit/config/-/config-0.1.2.tgz#0f61701c094ce40269c59e61cb19d8326dba76ec"
   integrity sha512-fOY0jxen7nEfivZc7BKm63WRcNEncidFhk+dIVR/0bj4tt5Xl0xyomPgyQqe38d3/PJ3RvqVTdupWFbWNJULkA==
 
-"@web3uikit/core@*":
+"@web3uikit/core@*", "@web3uikit/core@^0.2.22":
   version "0.2.22"
   resolved "https://registry.yarnpkg.com/@web3uikit/core/-/core-0.2.22.tgz#f8225c527c8ee3299535ccdb83c8c6df43c3a615"
   integrity sha512-qm71Boy7q4DwkJTPFuJ8C1fhM6X6o30Lhz20BJLqx0Zc6caqP/jzfET6B2f9PNH6Amdv7buxR80kah9JmpPZQw==
@@ -2127,7 +2127,7 @@
     "@web3uikit/styles" "*"
     react-router-dom "^6.3.0"
 
-"@web3uikit/icons@*":
+"@web3uikit/icons@*", "@web3uikit/icons@^0.2.20":
   version "0.2.20"
   resolved "https://registry.yarnpkg.com/@web3uikit/icons/-/icons-0.2.20.tgz#89a386d5d39543b85bfaf4734da199940a887159"
   integrity sha512-+XYsI0gmcY79b9DVcsRnj7ZlblwEOnUeqkcMvz1t1ou3LGE7cJhDzlV+PezjI+DucjZtYDKbKGuVTdQjgqfyXg==
@@ -2141,7 +2141,7 @@
   dependencies:
     "@web3uikit/config" "*"
 
-"@web3uikit/web3@*":
+"@web3uikit/web3@*", "@web3uikit/web3@^0.2.2":
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@web3uikit/web3/-/web3-0.2.2.tgz#3dbecc4b2954470a733ab50d972e065146040db9"
   integrity sha512-OwTZJTnaWMuKXsjDpYtXSV3w12Rwm8sv4GB5ptjNoTZZ2xXx2kJrLKbRrgBgm2duhLocD2u2mdXAAmcbyyaxkg==
@@ -6874,6 +6874,11 @@ react-dom@^17:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     scheduler "^0.20.2"
+
+react-icons@^4.4.0:
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.7.1.tgz#0f4b25a5694e6972677cb189d2a72eabea7a8345"
+  integrity sha512-yHd3oKGMgm7zxo3EA7H2n7vxSoiGmHk5t6Ou4bXsfcgWyhfDKMpyKfhHR6Bjnn63c+YXBLBPUql9H4wPJM6sXw==
 
 react-is@^16.13.1:
   version "16.13.1"

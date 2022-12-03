@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
 import "./home.css";
@@ -9,15 +9,18 @@ import ReactDOM from "react-dom/client";
 import { MoralisProvider } from "react-moralis";
 import { NotificationProvider } from "web3uikit";
 
+
+import Layout from '../components/layout'
+
 function MyApp({ Component, pageProps }) {
   return (
     <div className={classes.App}>
       <MoralisProvider initializeOnMount={false}>
         <NotificationProvider>
           {/* <Link href="/"></Link> */}
-          <Component
-
-          />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </NotificationProvider>
       </MoralisProvider>
     </div>
