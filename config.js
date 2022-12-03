@@ -1,3 +1,1 @@
-
-  export const oasisAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
-  
+export const oasisAddress = "0x971cB7bc6d425d1D12f0160127049160ec0879c6";
