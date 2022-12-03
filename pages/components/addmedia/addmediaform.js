@@ -36,7 +36,7 @@ function AddMediaForm({ setLoadingState }) {
   const [media, setMedia] = useState(null);
   const [mediaUri, setMediaUri] = useState("");
   const [mediaCover, setMediaCover] = useState("");
-  const [mediaType, setMediaType] = useState("");
+  const [mediaType, setMediaType] = useState("image");
   const [tokenPrice, setTokenPrice] = useState(0);
   const [royalty, setRoyalty] = useState(0);
   const [NFTCover, setNFTCover] = useState(null);
@@ -44,6 +44,7 @@ function AddMediaForm({ setLoadingState }) {
 
   const router = useRouter();
   function handleSelect(e) {
+    console.log(e.id);
     setMediaType(e.id);
   }
   function handleChange(e) {

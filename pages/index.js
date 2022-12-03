@@ -27,7 +27,7 @@ export default function Home() {
 
     const contract = new ethers.Contract(oasisAddress, Oasis.abi, provider);
     const data = await contract.getAllMedia();
-    // console.log("media items data is", data);
+    console.log("media items data is", data);
 
     const mediaItems = await Promise.all(
       data.map(async (i) => {
@@ -48,6 +48,8 @@ export default function Home() {
           mediaType: i.mediaType,
           mediaURI: i.mediaURI,
           coverURI: i.coverURI,
+          isGated: i.isGated,
+          availableCount: i.availableCount.toNumber(),
         };
         return item;
       })
@@ -57,7 +59,7 @@ export default function Home() {
   }
 
   return (
-    <div className="home2">
+    <div>
       {mediaItems.length == 0 && (
         <h5 style={{ textAlign: "center", width: "100%" }}>
           Nothing published yet...
