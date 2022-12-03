@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { ConnectButton } from "web3uikit";
+import { Button } from '@web3uikit/core';
+
 
 
 export default function Header() {
@@ -11,27 +13,39 @@ export default function Header() {
                         <img src="/images/logo2.png" />
                     </Link>
                 </div>
-                <div>
-                    <Link href="/addnewmedia">
-                        <div className="upload_button ">
-                            <p>Upload Content</p>
-                        </div>
-                    </Link>
-                </div>
-                <div>
-                    <Link href="/addnewmedia">
-                        <div className="upload_button ">
-                            <p>Upload Content</p>
-                        </div>
-                    </Link>
-                </div>
-                <div>
-                    <Link href="/addnewmedia">
-                        <div className="upload_button ">
-                            <p>Upload Content</p>
-                        </div>
-                    </Link>
-                </div>
+                <Link href="/addnewmedia">
+                    <Button
+                        onClick={function noRefCheck() { }}
+                        text="Upload Content"
+                        theme="outline"
+                        style={{
+                            marginLeft: '10px'
+                        }}
+                        size='large'
+                    />
+                </Link>
+                <Link href="/addnewmedia">
+                    <Button
+                        onClick={function noRefCheck() { }}
+                        text="Upload Content"
+                        theme="outline"
+                        style={{
+                            marginLeft: '10px'
+                        }}
+                        size='large'
+                    />
+                </Link>
+                <Link href="/addnewmedia">
+                    <Button
+                        onClick={function noRefCheck() { }}
+                        text="Upload Content"
+                        theme="outline"
+                        style={{
+                            marginLeft: '10px'
+                        }}
+                        size='large'
+                    />
+                </Link>
                 <div className="header_right">
                     <ConnectButton moralisAuth={false} />
                 </div>
