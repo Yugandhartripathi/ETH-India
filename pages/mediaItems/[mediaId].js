@@ -138,13 +138,14 @@ function MediaItemPage() {
                 )}
 
                 {media.mediaType == "video" && (
-                  <ReactPlayer url="https://cdn.livepeer.com/hls/0efey7a5s67ha39v/index.m3u8" /> // live stream
-                  // <Player
-                  //   playsInline
-                  //   poster="/assets/poster.png"
-                  //   // src={media.mediaURI}
-                  //   src="https://cdn.livepeer.com/hls/0efey7a5s67ha39v/index.m3u8"
-                  // /> // pre recorded
+                  // <ReactPlayer url="https://cdn.livepeer.com/hls/0efey7a5s67ha39v/index.m3u8" /> // live stream
+                  <Player
+                    playsInline
+                    poster="/assets/poster.png"
+                    // src={media.mediaURI}
+                    src="https://cdn.livepeer.com/hls/0efey7a5s67ha39v/index.m3u8"
+                  />
+                  // pre recorded
                 )}
                 <h1>Content Details</h1>
                 <div className={classes.song1}>
