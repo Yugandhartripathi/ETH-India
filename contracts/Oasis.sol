@@ -394,15 +394,6 @@ contract Oasis is ERC721URIStorage {
         userToFollowers[userAddress].push(msg.sender);
     }
 
-    // function fetchAllUsers() public view returns (User[] memory) {
-    //     uint256 countUsers = _userIds.current();
-    //     User[] memory userList = new User[](countUsers);
-    //     for (uint i = 1; i < countUsers; i++) {
-    //         userList.push(userIdToUser[i]);
-    //     }
-    //     return userList;
-    // }
-
     function getUserFollowers(
         address userAddress
     ) public view returns (address[] memory) {
@@ -411,5 +402,16 @@ contract Oasis is ERC721URIStorage {
 
     function getUser(address userAddress) public view returns (User memory) {
         return userAddressToUser[userAddress];
+    }
+
+    function hasAccessToMedia(uint256 mediaId) public returns (bool) {
+        bool hasAccess = false;
+        NFTToken[] memory tokensForThisMedia = mediaIdToTokenIds[mediaId];
+        for (uint i = 0; i < tokensForThisMedia.length; i++) {
+            if (msg.sender == tokensForThisMedia[i].owner) {
+                hasAccess = true;
+            }
+        }
+        return hasAccess;
     }
 }
