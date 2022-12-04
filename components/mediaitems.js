@@ -1,8 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Avatar, Button } from "@web3uikit/core";
 import Link from "next/link";
+import { ethers } from "ethers";
 
 function MediaItems(props) {
+  const [ensName, setENS] = useState("");
+
+  useEffect(() => {
+    console.log("test");
+    loadENS();
+  }, []);
+
+  async function loadENS() {
+    const provider2 = new ethers.providers.Web3Provider(window.ethereum, "any");
+    let accounts = await provider2.send("eth_requestAccounts", []);
+    var address = accounts[0];
+    console.log("address", address);
+    var name = await provider2.lookupAddress(address);
+    console.log("ENS NAME", name);
+    setENS(name);
+  }
+
   // console.log("ind com",props)
   return (
     <div className="home2">
@@ -21,9 +39,7 @@ function MediaItems(props) {
             >
               <div>
                 <Avatar image={d.coverURI} theme="image" size="230" isRounded />
-
                 <br />
-
                 <div
                   style={{
                     alignItems: "center",
@@ -49,7 +65,7 @@ function MediaItems(props) {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  @{d.creator}
+                  @{ensName != null ? ensName : d.creator}
                 </div>
                 <div
                   style={{

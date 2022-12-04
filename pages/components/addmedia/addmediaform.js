@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 const axios = require("axios").default;
 import { useRouter } from "next/router";
-
+import { Loader } from "./Loader";
 import { PROJECTID, PROJECTSECRET } from "./../../../api_key";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 
@@ -47,6 +47,7 @@ function AddMediaForm({ setLoadingState }) {
   const [eventTime, setEventTime] = useState("");
   const [eventVenue, setEventVenue] = useState("");
   const [eventType, setEventType] = useState("");
+  const [load, setLoad] = useState(false);
 
   const router = useRouter();
   function handleSelect(e) {
@@ -128,6 +129,7 @@ function AddMediaForm({ setLoadingState }) {
   }
 
   async function listNFTForSale() {
+    setLoad(true);
     let mediaUrl;
     try {
       const result = await ipfs.add(media);
@@ -207,209 +209,216 @@ function AddMediaForm({ setLoadingState }) {
       await transaction2.wait();
     }
     setLoadingState(false);
+    setLoad(false);
     router.push("/");
   }
 
   return (
-    <div className="form">
-      <div className="input-div">
-        <Select
-          defaultOptionIndex={0}
-          id="Select"
-          name="mediaType"
-          label="Media Type"
-          onChange={handleSelect}
-          options={[
-            {
-              id: "image",
-              label: "Image",
-            },
-            {
-              id: "audio",
-              label: "Audio",
-            },
-            {
-              id: "video",
-              label: "Video",
-            },
-          ]}
-          validation={{
-            required: true,
-          }}
-        />
-      </div>
-      <div className="input-div">
-        <Typography variant="subtitle2">Upload Media</Typography>
-        <Upload
-          onChange={handleMediaFile}
-          name="media"
-          theme="textOnly"
-          validation={{
-            required: true,
-          }}
-        />
-      </div>
-      <div className="input-div">
-        <Typography variant="subtitle2">Upload Media Cover</Typography>
-        <Upload
-          onChange={handleMediaCoverFile}
-          name="cover"
-          theme="textOnly"
-          validation={{
-            required: true,
-          }}
-        />
-      </div>
-      <div className="input-div">
-        <Input
-          label="Title"
-          name="name"
-          onChange={handleChange}
-          validation={{
-            required: true,
-          }}
-        />
-      </div>
-      <div className="input-div">
-        <Input
-          label="Description"
-          name="desc"
-          //   type="text"
-          onChange={handleChange}
-          validation={{
-            required: true,
-          }}
-        />
-      </div>
-      <div className="input-div">
-        <Checkbox
-          id="event"
-          label="Is Event?"
-          name="event"
-          onChange={handleChange}
-        />
-      </div>
-      <div className="Optionals2">
-        {!isEvent ? null : (
-          <div>
-            <div className="input-div">
-              <Input
-                label="Event Date"
-                onChange={handleChange}
-                name="eventDate"
-                type="string"
-                validation={{
-                  numberMax: 100,
-                  numberMin: 0,
-                }}
-              />
-            </div>
-            <div className="input-div">
-              <Input
-                label="Event Time"
-                onChange={handleChange}
-                name="eventTime"
-                type="string"
-                validation={{
-                  numberMax: 100,
-                  numberMin: 0,
-                }}
-              />
-            </div>
-            <div className="input-div">
-              <Input
-                label="Event Venue"
-                onChange={handleChange}
-                name="eventVenue"
-                type="string"
-                validation={{
-                  numberMax: 100,
-                  numberMin: 0,
-                }}
-              />
-            </div>
-            <div className="input-div">
-              <Input
-                label="Event Type"
-                onChange={handleChange}
-                name="eventType"
-                type="string"
-                validation={{
-                  numberMax: 100,
-                  numberMin: 0,
-                }}
-              />
-            </div>
+    <div>
+      {load == true ? (
+        <Loader />
+      ) : (
+        <div className="form">
+          <div className="input-div">
+            <Select
+              defaultOptionIndex={0}
+              id="Select"
+              name="mediaType"
+              label="Media Type"
+              onChange={handleSelect}
+              options={[
+                {
+                  id: "image",
+                  label: "Image",
+                },
+                {
+                  id: "audio",
+                  label: "Audio",
+                },
+                {
+                  id: "video",
+                  label: "Video",
+                },
+              ]}
+              validation={{
+                required: true,
+              }}
+            />
           </div>
-        )}
-      </div>
-
-      <div className="input-div">
-        <Checkbox
-          id="gated"
-          label="Gated by NFT?"
-          name="gated"
-          onChange={handleChange}
-        />
-      </div>
-
-      <div className="Optionals">
-        {!isGated ? null : (
-          <div>
-            <div className="input-div">
-              <Input
-                label="NFT Count"
-                onChange={handleChange}
-                name="count"
-                type="number"
-                validation={{
-                  numberMax: 100,
-                  numberMin: 0,
-                }}
-              />
-            </div>
-            <div className="input-div">
-              <Input
-                label="Royalty Percentage"
-                onChange={handleChange}
-                type="number"
-                name="royalty"
-                prefixIcon="%"
-                validation={{
-                  numberMax: 100,
-                  numberMin: 0,
-                }}
-              />
-            </div>
-            <div className="input-div">
-              <Input
-                label="NFT Price"
-                onChange={handleChange}
-                name="price"
-                prefixIcon="ETH"
-                type="text"
-              />
-            </div>
-            <div className="input-div">
-              <Typography variant="subtitle2">
-                Upload NFT Cover Image
-              </Typography>
-              <Upload
-                onChange={handleNFTCoverFile}
-                theme="textOnly"
-                name="nftcover"
-                validation={{
-                  required: true,
-                }}
-              />
-            </div>
+          <div className="input-div">
+            <Typography variant="subtitle2">Upload Media</Typography>
+            <Upload
+              onChange={handleMediaFile}
+              name="media"
+              theme="textOnly"
+              validation={{
+                required: true,
+              }}
+            />
           </div>
-        )}
-      </div>
+          <div className="input-div">
+            <Typography variant="subtitle2">Upload Media Cover</Typography>
+            <Upload
+              onChange={handleMediaCoverFile}
+              name="cover"
+              theme="textOnly"
+              validation={{
+                required: true,
+              }}
+            />
+          </div>
+          <div className="input-div">
+            <Input
+              label="Title"
+              name="name"
+              onChange={handleChange}
+              validation={{
+                required: true,
+              }}
+            />
+          </div>
+          <div className="input-div">
+            <Input
+              label="Description"
+              name="desc"
+              //   type="text"
+              onChange={handleChange}
+              validation={{
+                required: true,
+              }}
+            />
+          </div>
+          <div className="input-div">
+            <Checkbox
+              id="event"
+              label="Is Event?"
+              name="event"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="Optionals2">
+            {!isEvent ? null : (
+              <div>
+                <div className="input-div">
+                  <Input
+                    label="Event Date"
+                    onChange={handleChange}
+                    name="eventDate"
+                    type="string"
+                    validation={{
+                      numberMax: 100,
+                      numberMin: 0,
+                    }}
+                  />
+                </div>
+                <div className="input-div">
+                  <Input
+                    label="Event Time"
+                    onChange={handleChange}
+                    name="eventTime"
+                    type="string"
+                    validation={{
+                      numberMax: 100,
+                      numberMin: 0,
+                    }}
+                  />
+                </div>
+                <div className="input-div">
+                  <Input
+                    label="Event Venue"
+                    onChange={handleChange}
+                    name="eventVenue"
+                    type="string"
+                    validation={{
+                      numberMax: 100,
+                      numberMin: 0,
+                    }}
+                  />
+                </div>
+                <div className="input-div">
+                  <Input
+                    label="Event Type"
+                    onChange={handleChange}
+                    name="eventType"
+                    type="string"
+                    validation={{
+                      numberMax: 100,
+                      numberMin: 0,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
 
-      <div className="input-div">
-        <Button onClick={listNFTForSale} text="Submit" theme="primary" />
-      </div>
+          <div className="input-div">
+            <Checkbox
+              id="gated"
+              label="Gated by NFT?"
+              name="gated"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="Optionals">
+            {!isGated ? null : (
+              <div>
+                <div className="input-div">
+                  <Input
+                    label="NFT Count"
+                    onChange={handleChange}
+                    name="count"
+                    type="number"
+                    validation={{
+                      numberMax: 100,
+                      numberMin: 0,
+                    }}
+                  />
+                </div>
+                <div className="input-div">
+                  <Input
+                    label="Royalty Percentage"
+                    onChange={handleChange}
+                    type="number"
+                    name="royalty"
+                    prefixIcon="%"
+                    validation={{
+                      numberMax: 100,
+                      numberMin: 0,
+                    }}
+                  />
+                </div>
+                <div className="input-div">
+                  <Input
+                    label="NFT Price"
+                    onChange={handleChange}
+                    name="price"
+                    prefixIcon="ETH"
+                    type="text"
+                  />
+                </div>
+                <div className="input-div">
+                  <Typography variant="subtitle2">
+                    Upload NFT Cover Image
+                  </Typography>
+                  <Upload
+                    onChange={handleNFTCoverFile}
+                    theme="textOnly"
+                    name="nftcover"
+                    validation={{
+                      required: true,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="input-div">
+            <Button onClick={listNFTForSale} text="Submit" theme="primary" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
