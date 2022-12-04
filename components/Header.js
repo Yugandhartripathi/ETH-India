@@ -24,10 +24,10 @@ export default function Header() {
                         size='large'
                     />
                 </Link>
-                <Link href="/addnewmedia">
+                <Link href="/worldVerification">
                     <Button
                         onClick={function noRefCheck() { }}
-                        text="Upload Content"
+                        text="Verified by WC"
                         theme="outline"
                         style={{
                             marginLeft: '10px'
@@ -35,10 +35,10 @@ export default function Header() {
                         size='large'
                     />
                 </Link>
-                <Link href="/addnewmedia">
+                <Link href="/livestream/createStream">
                     <Button
                         onClick={function noRefCheck() { }}
-                        text="Upload Content"
+                        text="Start a Live Stream"
                         theme="outline"
                         style={{
                             marginLeft: '10px'

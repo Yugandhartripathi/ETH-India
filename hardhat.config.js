@@ -27,8 +27,13 @@ module.exports = {
     //  unused configuration commented out for now
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com",
+<<<<<<< HEAD
       accounts: [Key],
+=======
+      accounts: process.env.privateKey,
+>>>>>>> 11d0ecc (Live stream integration)
     },
+    
   },
   solidity: {
     version: "0.8.9",
