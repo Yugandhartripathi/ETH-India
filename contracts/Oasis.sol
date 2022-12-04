@@ -20,24 +20,28 @@ contract Oasis is ERC721URIStorage {
     Counters.Counter private _mediaIds;
     Counters.Counter private _tokenIds;
     Counters.Counter private _eventIds;
+    Counters.Counter private _userIds;
 
     mapping(uint256 => MediaItem) private mediaIdToMediaItems;
     mapping(uint256 => NFTToken) private tokenIdToToken;
     mapping(uint256 => Event) private eventIdToEvent;
+    mapping(uint256 => User) private userIdToUser;
+    mapping(address => User) private userAddressToUser;
 
     // Mappings
-    mapping(address => User[]) private creatorToFollowers;
+    mapping(address => address[]) private userToFollowers;
     mapping(address => MediaItem[]) private creatorToMediaItems;
     mapping(address => Event[]) private creatorToEvent;
 
-    mapping(address => uint256[]) private userOwnedTokens; // useless
-    mapping(uint256 => uint256[]) private mediaIdToTokenIds; //
+    mapping(uint256 => uint256[]) private mediaIdToTokenIds;
 
     mapping(uint256 => uint256) private tokenIdToMediaId;
     mapping(address => uint256) private creatorTokenSaleCount;
     mapping(address => uint256) private creatorTokenSaleValue;
     mapping(uint256 => uint256) private eventToMedia;
     mapping(uint256 => uint256) private mediaToEvent;
+
+    mapping(address => bool) private userToExistence;
 
     // Structs
     struct Event {
@@ -73,12 +77,21 @@ contract Oasis is ERC721URIStorage {
     }
 
     struct User {
+        uint256 userId;
         address accountAddress;
-        string accountType;
+        uint accountType;
     }
 
     constructor() ERC721("OasisTokens", "OASIS") {
         smartContractOwner = payable(msg.sender);
+    }
+
+    function createUser(address userAddress, uint accountType) private {
+        _userIds.increment();
+        uint256 id = _userIds.current();
+        User memory user = User(id, userAddress, accountType);
+        userIdToUser[id] = user;
+        userAddressToUser[userAddress] = user;
     }
 
     function createMediaItem(
@@ -118,6 +131,11 @@ contract Oasis is ERC721URIStorage {
 
         creatorToMediaItems[msg.sender].push(item);
         mediaIdToMediaItems[id] = item;
+
+        if (!userToExistence[msg.sender]) {
+            createUser(msg.sender, 1);
+            userToExistence[msg.sender] = true;
+        }
 
         if (_isGated) {
             createTokens(
@@ -222,6 +240,10 @@ contract Oasis is ERC721URIStorage {
 
         //payable(smartContractOwner).transfer(listingPrice);
 
+        if (!userToExistence[msg.sender]) {
+            createUser(msg.sender, 2);
+            userToExistence[msg.sender] = true;
+        }
         tokenIdToToken[tokenId].owner = payable(msg.sender);
         tokenIdToToken[tokenId].isSold = true;
         tokenIdToToken[tokenId].seller = payable(address(0));
@@ -298,13 +320,15 @@ contract Oasis is ERC721URIStorage {
     }
 
     /* Returns only items that a user has purchased */
-    function fetchMyNFTs() public view returns (NFTToken[] memory) {
+    function fetchMyNFTs(
+        address userAddress
+    ) public view returns (NFTToken[] memory) {
         uint totalItemCount = _tokenIds.current();
         uint itemCount = 0;
         uint currentIndex = 0;
 
         for (uint i = 0; i < totalItemCount; i++) {
-            if (tokenIdToToken[i + 1].owner == msg.sender) {
+            if (tokenIdToToken[i + 1].owner == userAddress) {
                 itemCount += 1;
             }
         }
@@ -312,7 +336,7 @@ contract Oasis is ERC721URIStorage {
         NFTToken[] memory items = new NFTToken[](itemCount);
 
         for (uint256 i = 0; i < totalItemCount; i++) {
-            if (tokenIdToToken[i + 1].owner == msg.sender) {
+            if (tokenIdToToken[i + 1].owner == userAddress) {
                 uint currentId = i + 1;
                 NFTToken storage currentItem = tokenIdToToken[currentId];
                 items[currentIndex] = currentItem;
@@ -364,5 +388,28 @@ contract Oasis is ERC721URIStorage {
     // revenue generated for a creator
     function creatorRev(address creator) public view returns (uint256) {
         return creatorTokenSaleValue[creator];
+    }
+
+    function followUser(address userAddress) public {
+        userToFollowers[userAddress].push(msg.sender);
+    }
+
+    // function fetchAllUsers() public view returns (User[] memory) {
+    //     uint256 countUsers = _userIds.current();
+    //     User[] memory userList = new User[](countUsers);
+    //     for (uint i = 1; i < countUsers; i++) {
+    //         userList.push(userIdToUser[i]);
+    //     }
+    //     return userList;
+    // }
+
+    function getUserFollowers(
+        address userAddress
+    ) public view returns (address[] memory) {
+        return userToFollowers[userAddress];
+    }
+
+    function getUser(address userAddress) public view returns (User memory) {
+        return userAddressToUser[userAddress];
     }
 }

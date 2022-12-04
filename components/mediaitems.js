@@ -24,22 +24,31 @@ function MediaItems(props) {
   // console.log("ind com",props)
   return (
     <div className="home2">
-      {props.mediaItems.map((d, index) => (
-        <div
-          style={{
-            width: "250px",
-            padding: "20px",
-          }}
-        >
-          {/* {console.log(index, d)} */}
-          <Link href={`/mediaItems/${d.mediaId}`}>
+      {props.mediaItems &&
+        props.mediaItems.map((d, index) => (
+          <div
+            style={{
+              width: "250px",
+              padding: "20px",
+            }}
+          >
+            {console.log(index, d)}
+
             <Card
               onClick={function noRefCheck() {}}
               tooltipText={d.isGated ? "Buy NFT to gain access" : "Free"}
             >
               <div>
-                <Avatar image={d.coverURI} theme="image" size="230" isRounded />
-                <br />
+                <Link href={`/mediaItems/${d.mediaId}`}>
+                  <Avatar
+                    image={d.coverURI}
+                    theme="image"
+                    size="230"
+                    isRounded
+                  />
+
+                  <br />
+                </Link>
                 <div
                   style={{
                     alignItems: "center",
@@ -52,21 +61,23 @@ function MediaItems(props) {
                   {d.title}
                 </div>
 
-                <div
-                  style={{
-                    alignItems: "center",
-                    color: "#68738D",
-                    display: "flex",
-                    maxWidth: "220px",
-                    fontWeight: 600,
-                    fontSize: "1.2rem",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  @{ensName != null ? ensName : d.creator}
-                </div>
+                <Link href={`/user/${d.creator}`}>
+                  <div
+                    style={{
+                      alignItems: "center",
+                      color: "#68738D",
+                      display: "flex",
+                      maxWidth: "220px",
+                      fontWeight: 600,
+                      fontSize: "1.2rem",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    @{ensName != null ? ensName : d.creator}
+                  </div>
+                </Link>
                 <div
                   style={{
                     alignItems: "center",
@@ -92,9 +103,8 @@ function MediaItems(props) {
                 </div>
               </div>
             </Card>
-          </Link>
-        </div>
-      ))}
+          </div>
+        ))}
     </div>
   );
 }
