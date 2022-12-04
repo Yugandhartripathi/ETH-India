@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react'
 import Router, { useRouter } from 'next/router';
 import ReactPlayer from "react-player";
+import { red } from 'bn.js';
 
 
 
@@ -62,13 +63,18 @@ export default function CreateStream() {
 
   return (
     <div style={{
-        
+        display: "flex",
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+        height: '90vh'
     }}>
       <h1 style= {{
-        color:'white'
+        color:'white',
+        alignSelf: 'center'
       }}>Create a New Stream</h1>
       <form style={{
-        marginLeft:20
+        color: 'white'
       }}onSubmit={createNewStream} method='POST' >
         <label htmlFor='stream'>Stream Name: </label>
         <input
@@ -82,12 +88,10 @@ export default function CreateStream() {
         <br />
         <button type='submit' 
         style={{
-        position: 'absolute',
-        display: 'inline-block',
-        padding: '10px 20px',
+        margin: '20px',
+        position: 'relative',
         fontSize: '16px',
         fontWeight: 'bold',
-        marginTop: 70,
         color: 'white',
         backgroundColor: '#00b3b3',
         borderRadius: '4px',
@@ -95,13 +99,13 @@ export default function CreateStream() {
       }}>Create Stream</button>
       </form>
       {isLoading && <p style= {{color:'white'}}>Loading...</p>}
-      {streamData!=null && <div  style= {{ margin: 160, marginLeft: 300}}>
+      {streamData!=null && <div style= {{ display: 'flex', flexDirection: 'row', alignItems: 'self-end'}}><div  style= {{ display: 'flex', flexDirection: 'column' }}>
         <p style= {{color:'white'}}>Here is your streamKey: {streamData.streamKey}</p>
         <p style= {{color:'white'}}>Server URL: rtmp://rtmp.livepeer.com/live/</p>
         <p style= {{color:'white'}}>Your streamlink </p>
         <p></p>
         <ReactPlayer url={`https://cdn.livepeer.com/hls/${streamData.playbackId}/index.m3u8`} />
-        </div>}
+        </div></div>}
         // live stream
     </div>
   );
